@@ -27,17 +27,18 @@ const server = http.createServer((req, res)=>{
         res.write('</body>');
         res.write('</html>');
         return res.end(); //after sending the response, we end the response to free up resources
-    }else if(req.url.toLocaleLowerCase === '/submit'  && req.method === 'POST' ){
+    }else if(req.url.toLocaleLowerCase() === '/submit'  && req.method === 'POST' ){
         fs.writeFile('user.txt', 'User submitted the form', (err) => {
             if (err) {
                 console.error('Error writing to file:', err);
             }
-
+            res.statusCode = 302; 
+            res.setHeader('Location', '/');
+            return res.end()
 
         });
-        res.statusCode = 302; 
-        res.setHeader('Location', '/');
-        return res.end()
+        return; //after handling the form submission, we return to prevent further processing of the request
+        
     }
     res.setHeader('Content-Type', 'text/html'); //default content type is text/html, so we set it here for all other routes and you can also set as 404 for we can't handel your request 
     res.write('<html>');
