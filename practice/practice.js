@@ -5,6 +5,25 @@ const server = http.createServer((req, res) => {
     console.log(req.url, req.method);
 
     res.setHeader('Content-Type', 'text/html');
+
+    if(req.url === '/home'){
+        res.write('<h1>Welcome to Myntra Home Page</h1>');
+        return res.end();
+    }   else if(req.url === '/men'){
+        res.write('<h1>Welcome to Myntra Men Page</h1>');
+        return res.end();
+    }   else if(req.url === '/women'){
+        res.write('<h1>Welcome to Myntra Women Page</h1>');
+        return res.end();
+    }   else if(req.url === '/kids'){
+        res.write('<h1>Welcome to Myntra Kids Page</h1>');
+        return res.end();
+    }   else if(req.url === '/cart'){
+        res.write('<h1>Welcome to Myntra Cart Page</h1>');
+        return res.end();
+    }
+
+
     res.write(`
         <html lang="en">
         <head>
@@ -25,7 +44,7 @@ const server = http.createServer((req, res) => {
         </body>
         </html>
     `);
-    res.end();
+    return res.end();
 
 
 
