@@ -29,7 +29,9 @@ const requestHandler = (req, res) => {
         res.write('</body>');
         res.write('</html>');
         return res.end(); //after sending the response, we end the response to free up resources
-    }else if(req.url.toLocaleLowerCase() === '/submit'  && req.method === 'POST' ){
+    }
+    
+    else if(req.url.toLocaleLowerCase() === '/submit'  && req.method === 'POST' ){
 
         //--------------CHUNK AND BUFFER AND PARSING --------------------------------------------
         const body = [];
@@ -53,18 +55,21 @@ const requestHandler = (req, res) => {
             fs.writeFile('user.txt', JSON.stringify(bodyObject), (err) => {
             if (err) {
                 console.error('Error writing to file:', err);
-            }
-
+            } //writeFile is asynchronous, so we handle the callback to check for errors and log them if they occur. If the file is written successfully, we can proceed with sending the response to the client.
+            res.statusCode = 302; 
+            res.setHeader('Location', '/');
+            return res.end();
         });
         //----------------------------------------------------------------------------
 
         
-            res.statusCode = 302; 
-            res.setHeader('Location', '/');
-            return res.end();
-
+            // res.statusCode = 302; 
+            // res.setHeader('Location', '/');
+            // return res.end();
+            //this code should be inside the callback of fs.writeFile to ensure that we only redirect after the file has been written successfully. Otherwise, we might end up redirecting before the file is written, which could lead to unexpected behavior. So we move the redirection code inside the callback of fs.writeFile like this.. if we put it outside, it will execute immediately after calling fs.writeFile, without waiting for the file writing to complete. This means that the client would be redirected before the server has finished processing the form data and writing it to the file, which could lead to issues such as the file not being written correctly or the client not receiving the expected response. By placing the redirection code inside the callback of fs.writeFile, we ensure that the redirection only occurs after the file has been successfully written, providing a more reliable and predictable user experience.
         });
         return; //after handling the form submission, we return to prevent further processing of the request
+        //or make next default code in else block and return here to prevent further processing of the request
         
     }
     res.setHeader('Content-Type', 'text/html'); //default content type is text/html, so we set it here for all other routes and you can also set as 404 for we can't handel your request 
