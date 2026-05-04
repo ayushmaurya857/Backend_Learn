@@ -1,8 +1,13 @@
 const http = require('http');
-const fs = require('fs');
+
+const syntax = require('./syntax');
+const logiaclerror = require('./logicalerror');
+
 
 const server = http.createServer((req, res) => {
-    console.log('Received request for:', req);
+    console.log('Received request for:', req.url, req.method);
+    syntax();
+    logiaclerror();
 });
 const PORT = 8082;
 server.listen(PORT, () => {
